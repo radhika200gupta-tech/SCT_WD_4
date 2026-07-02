@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>To-Do Web App</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+</head>
+<body>
+
+<div class="app">
+
+    <header class="topbar">
+
+        <button id="menuBtn" class="icon-btn menu-btn" title="Lists">
+            <i class="fa-solid fa-bars"></i>
+        </button>
+
+        <h1><i class="fa-solid fa-list-check"></i> To-Do</h1>
+
+        <nav class="view-switch" id="viewSwitch">
+            <button class="view-btn active" data-view="tasks" title="Tasks"><i class="fa-solid fa-list-check"></i></button>
+            <button class="view-btn" data-view="calendar" title="Calendar"><i class="fa-solid fa-calendar-days"></i></button>
+            <button class="view-btn" data-view="analytics" title="Analytics"><i class="fa-solid fa-chart-pie"></i></button>
+        </nav>
+
+        <div class="topbar-actions">
+            <button id="searchBtn" class="icon-btn" title="Search"><i class="fa-solid fa-magnifying-glass"></i></button>
+            <button id="themeBtn" class="icon-btn" title="Theme">
+                <i class="fa-solid fa-moon"></i>
+            </button>
+        </div>
+
+    </header>
+
+    <div id="searchPanel" class="search-panel">
+        <div class="search-panel-inner">
+            <i class="fa-solid fa-magnifying-glass search-icon"></i>
+            <input type="text" id="searchInput" placeholder="Search tasks across every list…" autocomplete="off">
+            <button id="closeSearchBtn" class="icon-btn small" title="Close"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div id="searchResults" class="search-results"></div>
+    </div>
+
+    <div class="body">
+
+        <aside id="sidebar" class="sidebar">
+
+            <div class="progress-card">
+
+                <div class="ring" id="progressRing">
+                    <svg viewBox="0 0 120 120">
+                        <circle class="ring-track" cx="60" cy="60" r="52"></circle>
+                        <circle class="ring-fill" id="ringFill" cx="60" cy="60" r="52"></circle>
+                    </svg>
+                    <div class="ring-label">
+                        <span id="ringPercent">0%</span>
+                        <small>done</small>
+                    </div>
+                </div>
+
+                <p class="progress-caption" id="progressCaption">0 of 0 tasks complete</p>
+
+            </div>
+
+            <div class="lists-head">
+                <span>My Lists</span>
+            </div>
+
+            <div id="listsContainer" class="lists"></div>
+
+            <button id="addListBtn" class="add-list-btn">
+                <i class="fa-solid fa-plus"></i> New list
+            </button>
+
+        </aside>
+
+        <div id="overlay" class="overlay"></div>
+
+        <main class="main">
+
+            <section id="tasksView" class="view-panel active">
+
+                <div class="list-title-row">
+                    <span class="list-color-dot" id="activeListDot"></span>
+                    <h2 id="activeListName">General</h2>
+                    <span id="activeListCount" class="count-pill">0</span>
+                </div>
+
+                <form id="addTaskForm" class="add-task-bar">
+
+                    <input type="text" id="taskInput" placeholder="Add a task…" autocomplete="off" required>
+
+                    <input type="date" id="taskDate" title="Due date">
+
+                    <input type="time" id="taskTime" title="Due time">
+
+                    <select id="taskPriority" title="Priority">
+                        <option value="low">Low</option>
+                        <option value="medium" selected>Medium</option>
+                        <option value="high">High</option>
+                    </select>
+
+                    <select id="taskRepeat" title="Repeat">
+                        <option value="none">No repeat</option>
+                        <option value="daily">Daily</option>
+                        <option value="weekly">Weekly</option>
+                        <option value="monthly">Monthly</option>
+                    </select>
+
+                    <button type="submit" class="add-btn" title="Add task">
+                        <i class="fa-solid fa-plus"></i>
+                    </button>
+
+                </form>
+
+                <div class="filters">
+                    <button class="filter-btn active" data-filter="all">All</button>
+                    <button class="filter-btn" data-filter="active">Pending</button>
+                    <button class="filter-btn" data-filter="completed">Completed</button>
+
+                    <button id="groupToggleBtn" class="group-toggle-btn" title="Group by date">
+                        <i class="fa-solid fa-layer-group"></i> Group by date
+                    </button>
+
+                    <button id="clearCompletedBtn" class="clear-completed-btn">
+                        <i class="fa-solid fa-broom"></i> Clear completed
+                    </button>
+                </div>
+
+                <div id="taskContainer" class="task-container"></div>
+
+                <p id="emptyState" class="empty-state">
+                    <i class="fa-solid fa-mug-hot"></i>
+                    No tasks here yet. Add your first one above.
+                </p>
+
+            </section>
+
+            <section id="calendarView" class="view-panel">
+
+                <div class="calendar-header">
+                    <button id="calPrevBtn" class="icon-btn small" title="Previous month"><i class="fa-solid fa-chevron-left"></i></button>
+                    <h2 id="calMonthLabel">Month Year</h2>
+                    <button id="calNextBtn" class="icon-btn small" title="Next month"><i class="fa-solid fa-chevron-right"></i></button>
+                    <button id="calTodayBtn" class="calendar-today-btn">Today</button>
+                </div>
+
+                <div class="calendar-weekdays">
+                    <span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span>
+                </div>
+
+                <div id="calendarGrid" class="calendar-grid"></div>
+
+                <div class="day-tasks-panel">
+                    <h3 id="dayTasksTitle">Select a day</h3>
+                    <div id="dayTasksContainer" class="day-tasks-container"></div>
+                </div>
+
+            </section>
+
+            <section id="analyticsView" class="view-panel">
+
+                <div class="list-title-row analytics-title-row">
+                    <div>
+                        <h2>Productivity Analytics</h2>
+                        <p class="view-subtitle">An overview of task completion and workload across all lists</p>
+                    </div>
+                </div>
+
+                <div class="analytics-summary">
+                    <div class="summary-card">
+                        <span class="summary-num" id="statCompleted">0</span>
+                        <span class="summary-label">Completed</span>
+                    </div>
+                    <div class="summary-card">
+                        <span class="summary-num" id="statPending">0</span>
+                        <span class="summary-label">Pending</span>
+                    </div>
+                    <div class="summary-card">
+                        <span class="summary-num" id="statOverdue">0</span>
+                        <span class="summary-label">Overdue</span>
+                    </div>
+                    <div class="summary-card">
+                        <span class="summary-num" id="statLists">0</span>
+                        <span class="summary-label">Lists</span>
+                    </div>
+                </div>
+
+                <div class="analytics-charts">
+
+                    <div class="chart-card">
+                        <h3>Tasks by list</h3>
+                        <div class="donut-wrap">
+                            <svg id="donutChart" viewBox="0 0 200 200"></svg>
+                            <div id="donutLegend" class="donut-legend"></div>
+                        </div>
+                    </div>
+
+                    <div class="chart-card">
+                        <h3>Completed — last 7 days</h3>
+                        <svg id="barChart" viewBox="0 0 300 180" preserveAspectRatio="none" class="bar-chart"></svg>
+                    </div>
+
+                </div>
+
+            </section>
+
+        </main>
+
+    </div>
+
+</div>
+
+<div id="editModal" class="modal-overlay">
+    <div class="modal">
+
+        <h3>Edit task</h3>
+
+        <input type="text" id="editTitle" placeholder="Task title">
+
+        <div class="modal-row">
+            <input type="date" id="editDate">
+            <input type="time" id="editTime">
+        </div>
+
+        <div class="modal-row">
+            <select id="editPriority">
+                <option value="low">Low priority</option>
+                <option value="medium">Medium priority</option>
+                <option value="high">High priority</option>
+            </select>
+
+            <select id="editRepeat">
+                <option value="none">No repeat</option>
+                <option value="daily">Daily</option>
+                <option value="weekly">Weekly</option>
+                <option value="monthly">Monthly</option>
+            </select>
+        </div>
+
+        <select id="editList"></select>
+
+        <div class="modal-actions">
+            <button id="cancelEditBtn" class="btn-ghost">Cancel</button>
+            <button id="saveEditBtn" class="btn-primary">Save changes</button>
+        </div>
+
+    </div>
+</div>
+
+<div id="listModal" class="modal-overlay">
+    <div class="modal">
+
+        <h3 id="listModalTitle">New list</h3>
+
+        <input type="text" id="listNameInput" placeholder="List name" maxlength="30">
+
+        <div class="wheel-section">
+            <div class="color-wheel-wrap" id="colorWheelWrap">
+                <canvas id="colorWheel" width="180" height="180"></canvas>
+                <div class="wheel-pointer" id="wheelPointer"></div>
+            </div>
+
+            <div class="wheel-controls">
+                <label class="wheel-label" for="lightnessSlider">Shade</label>
+                <input type="range" id="lightnessSlider" min="4" max="96" value="50">
+                <div class="color-preview-row">
+                    <span class="color-preview" id="colorPreview"></span>
+                    <span class="color-hex" id="colorHexLabel">#5b6bd6</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="swatch-row" id="listColorSwatches"></div>
+
+        <div class="modal-actions">
+            <button id="cancelListBtn" class="btn-ghost">Cancel</button>
+            <button id="saveListBtn" class="btn-primary">Save list</button>
+        </div>
+
+    </div>
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>
